@@ -39,3 +39,47 @@ void  write_dailylog(dailylog *handle, const char *info);
 //释放当前dailylog结构，代表当次书写结束
 void free_dailylog(dailylog *handle);
 ```
+
+#log program
+
+**Needs：**
+- log files are fixed in numbers and sizes
+- log files have time restrictions
+- a single files can be written at the same time
+- Time Related Issue：
+ - When deciding where(which file) to start when rerunning the program, time is not a reliable indicator
+ - Offer two interfaces, one with time recoded, another without
+
+**Design**
+Name：`dailylog`
+
+1.Check directory according to the input dir，if dir is not valid，then the program does not perform, nor it reports error.
+  Else，it logs messages into provided filename (from filename.log.1 to filename.log.n), n provided by user.
+
+2.If anyfile during the process have restricted permission，we skip this file.
+  If anyfile during the process is not available, we create it.
+
+3.Every time access_time, 每次书写新文件时增大1。所以，退出后重新书写该目录下log文件时，则从access_time最大的文件开始书写。
+
+4.When using this program，use `new_dailylog（params）` to initialize the structure，
+  with 2 parameters：dailylog's handle and message to be loged，
+  after usage, use `free_dailylog(dailylog *handle)` to free.
+
+**.h overview**
+Includes three functions：
+```
+/*
+ dir: directory
+ name: name of the log files
+ num: the maximum number of log files
+ size: the maximum size of a log file, in kb
+ b_need_time: if need time recoded, true for adding time
+*/
+dailylog* new_dailylog(const char *dir,const char *name,int num,int size,int b_need_time);
+
+//get info(message) from user, write into file
+void  write_dailylog(dailylog *handle, const char *info);
+
+//free struct, end writing
+void free_dailylog(dailylog *handle);
+```

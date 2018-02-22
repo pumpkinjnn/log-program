@@ -45,7 +45,9 @@ char* generating_log_file_path(dailylog *handle, int index){
     int max_length = (strlen(handle->log_file_path)+strlen(handle->log_file_name)+10);
 
     char*  cur_file_path = malloc(max_length);
-    snprintf(cur_file_path,max_length,"%s%s.log.%d",(const char*)handle->log_file_path, (const char*)handle->log_file_name, index);
+    snprintf(cur_file_path,max_length,"%s%s.log.%d",
+	     (const char*)handle->log_file_path, 
+	     (const char*)handle->log_file_name, index);
     return cur_file_path;
 }
 

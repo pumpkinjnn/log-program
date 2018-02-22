@@ -59,7 +59,7 @@ Name：`dailylog`
 2.If anyfile during the process have restricted permission，we skip this file.
   If anyfile during the process is not available, we create it.
 
-3.Every time access_time, 每次书写新文件时增大1。所以，退出后重新书写该目录下log文件时，则从access_time最大的文件开始书写。
+3.Every time record access_time at the head of a file, when starting a new file, access_time increase by 1.
 
 4.When using this program，use `new_dailylog（params）` to initialize the structure，
   with 2 parameters：dailylog's handle and message to be loged，

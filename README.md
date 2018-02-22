@@ -83,3 +83,44 @@ void  write_dailylog(dailylog *handle, const char *info);
 //free struct, end writing
 void free_dailylog(dailylog *handle);
 ```
+#log プログラム
+
+**要求：**
+- log ファイルはネームもサイズも規定されている
+- log ファイルは時間に限る
+- 一つのファイルは当時に二つのプログラムに書かれる可能性がある
+- 时间問題：
+ - 次に書くファイルを決めるときは、時間に頼らない
+ - 時間付きと時間切りバージョン二つある
+
+**デザイン**
+名前：`dailylog`
+
+1.ユーサーから提供したファイルの名前やサイズでファイルを作成する，権限のないときは記録しない，エラーもつくらない。
+　若能成功访问，则根据提供的filename及log文件数量要求从filename.log.1书写文件到filename.log.n。
+1.ユーサーから提供したファイルの名前やサイズでファイルを作成する，権限のないときは記録しない，エラーもつくらない。
+若能成功访问，则根据提供的filename及log文件数量要求从filename.log.1书写文件到filename.log.n。
+
+2.権限のないファイルはスキップ，存在しないファイルは作る。
+
+3.ファイルの初めにaccess_timeを書き, 新しく書くときはプラス1。
+
+4.使うとには，`new_dailylog（params）`でストラクチャを作る，`free_dailylog(dailylog *handle)`はdailylogストラクチャをフリーする。
+
+**.h文件介绍**
+包含三个函数：
+```
+/*
+ dir: 记录log目录名称
+ name: 记录log文件名称
+ num: 记录log文件数量
+ size: 一个log文件的大小上限，kb
+ b_need_time: 是否需要时间戳，1代表需要，0为不需要
+*/
+dailylog* new_dailylog(const char *dir,const char *name,int num,int size,int b_need_time);
+
+//用户给info，书写一条log信息
+void  write_dailylog(dailylog *handle, const char *info);
+
+//释放当前dailylog结构，代表当次书写结束
+void free_dailylog(dailylog *handle);
